@@ -18,15 +18,12 @@ module DataMemory(clk, rst, Address, WriteData, MemRead, MemWrite, ReadData);
 			data[ {Address[`ADDRESS_LEN - 1:2], 2'b11} ]
 		};
 	end
-
-	always @(Address, MemWrite, WriteData) begin
-		if (MemWrite) data[Address] = WriteData;
-	end
 	
 	always @(posedge clk, rst) begin
 		if (rst) begin
 			data = '{default:`WORD_LEN'b0};
-		end
+		end else if(MemWrite) 
+			data[Address] = WriteData;
 	end
 
 endmodule
