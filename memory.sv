@@ -12,10 +12,10 @@ module DataMemory(clk, rst, Address, WriteData, MemRead, MemWrite, ReadData);
 
 	always @(MemRead, Address) begin
 		if (MemRead) ReadData = {
-			data[ {Address[`ADDRESS_LEN - 1:2], 2'b00} ], 
-			data[ {Address[`ADDRESS_LEN - 1:2], 2'b01} ], 
-			data[ {Address[`ADDRESS_LEN - 1:2], 2'b10} ], 
-			data[ {Address[`ADDRESS_LEN - 1:2], 2'b11} ]
+			data[ {Address[`ADDRESS_LEN - 1:2], 2'b11} ],
+			data[ {Address[`ADDRESS_LEN - 1:2], 2'b10} ],
+			data[ {Address[`ADDRESS_LEN - 1:2], 2'b01} ],
+			data[ {Address[`ADDRESS_LEN - 1:2], 2'b00} ]	
 		};
 	end
 	
