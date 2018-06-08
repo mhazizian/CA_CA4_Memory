@@ -6,6 +6,5 @@
 `define CACHE_INDEX_LEN		12
 
 `define CACHE_BLOCK_LEN		130
-`define CACHE_CAP			4096
-`define MEM_CAP				32768
-
+`define CACHE_CAPACITY		4096
+`define MEM_CAPACITY		32768

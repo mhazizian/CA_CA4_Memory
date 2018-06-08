@@ -1,43 +1,43 @@
 `include "defines.sv"
 
-module Data_memory(clk, rst, address, write_data, mem_read, 
-		mem_write, read_data, data_out);
+module Main_memory(clk, rst, address, write_data, read_en, 
+		write_en, read_data_128, read_data_32);
 
 	input [`ADDRESS_LEN - 1:0] address;
 	input [`WORD_LEN - 1:0] write_data;
-	input clk, rst, mem_read, mem_write;
+	input clk, rst, read_en, write_en;
 
-	output logic[`WORD_LEN - 1:0] data_out;
-	output logic[`CACHE_BLOCK_LEN - 3 :0] read_data;
+	output logic[`WORD_LEN - 1:0] read_data_32;
+	output logic[`CACHE_BLOCK_LEN - 3 :0] read_data_128;
 
+	logic [`WORD_LEN -1:0] main_memory [0:`MEM_CAPACITY - 1];
 	int i;
 
-	reg[`WORD_LEN -1:0] data[0:`MEM_CAP - 1];
 
-	always @(mem_read, address) begin
-		if (mem_read) begin
-		read_data <= {
-			data[ {address[`ADDRESS_LEN - 1:2], 2'b11} ],
-			data[ {address[`ADDRESS_LEN - 1:2], 2'b10} ],
-			data[ {address[`ADDRESS_LEN - 1:2], 2'b01} ],
-			data[ {address[`ADDRESS_LEN - 1:2], 2'b00} ]	
-		};
+	always @(posedge clk, rst) begin
+		if (rst) begin
+			main_memory = '{default:`WORD_LEN'b0};		
+			for (i = 1024 ; i < 9216 ; i = i + 1)
+				main_memory[i] = i;
 
-		data_out <= address[`ADDRESS_LEN - 1:0];
+		end else if(write_en) 
+			main_memory[address] = write_data;
+	end
+
+
+
+	always @(read_en, address) begin
+		if (read_en) begin
+			read_data_128 <= {
+				main_memory[ {address[`ADDRESS_LEN - 1:2], 2'b11} ],
+				main_memory[ {address[`ADDRESS_LEN - 1:2], 2'b10} ],
+				main_memory[ {address[`ADDRESS_LEN - 1:2], 2'b01} ],
+				main_memory[ {address[`ADDRESS_LEN - 1:2], 2'b00} ]	
+			};
+
+			read_data_32 <= address[`ADDRESS_LEN - 1:0];
 
 		end
 	end
 	
-
-	always @(posedge clk, rst) begin
-		if (rst) begin
-			data = '{default:`WORD_LEN'b0};
-
-			for (i = 1024 ; i < 9216 ; i = i + 1)
-				data[i] = i;
-
-		end else if(mem_write) 
-			data[address] = write_data;
-	end
-
 endmodule
