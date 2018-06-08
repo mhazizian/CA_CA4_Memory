@@ -22,9 +22,9 @@ module test_bench();
 	initial repeat (50000) #100 clk = ~clk;
 
 	initial begin
-		#50
+		#25
 		rst = 1'b1;
-		#100
+		#50
 		rst = 1'b0;
 	end
 

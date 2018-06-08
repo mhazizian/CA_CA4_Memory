@@ -16,14 +16,14 @@ module Data_memory(clk, rst, address, write_data, mem_read,
 
 	always @(mem_read, address) begin
 		if (mem_read) begin
-		read_data = {
+		read_data <= {
 			data[ {address[`ADDRESS_LEN - 1:2], 2'b11} ],
 			data[ {address[`ADDRESS_LEN - 1:2], 2'b10} ],
 			data[ {address[`ADDRESS_LEN - 1:2], 2'b01} ],
 			data[ {address[`ADDRESS_LEN - 1:2], 2'b00} ]	
 		};
 
-		data_out = address[`ADDRESS_LEN - 1:0];
+		data_out <= address[`ADDRESS_LEN - 1:0];
 
 		end
 	end
